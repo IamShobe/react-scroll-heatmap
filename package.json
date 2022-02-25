@@ -1,0 +1,46 @@
+{
+  "name": "react-scroll-heatmap",
+  "version": "0.1.0",
+  "description": "React scroll heatmap",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rm -rf dist && babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "heatmap",
+    "scrollbar",
+    "react"
+  ],
+  "author": "Elran Shefer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamShobe/react-scroll-heatmap.git"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/react": "^17.0.39",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@types/react-dom": "^17.0.11",
+    "react-dom": "^17.0.2",
+    "react": "^17.0.2"
+  }
+}
