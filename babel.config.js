@@ -10,7 +10,8 @@ module.exports = {
                     "safari": "11.1"
                 },
                 "useBuiltIns": "usage",
-                "corejs": "3.6.5"
+                "modules": false,
+                "corejs": 3
             }
         ],
         "@babel/preset-react",
@@ -19,5 +20,5 @@ module.exports = {
     plugins: [
         "@babel/plugin-proposal-class-properties",
         "@babel/plugin-proposal-object-rest-spread"
-    ]
+    ],
 }

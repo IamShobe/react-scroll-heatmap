@@ -3,11 +3,13 @@
   "version": "0.1.1",
   "description": "React scroll heatmap",
   "scripts": {
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --project tsconfig-build.json --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "build": "npm run build:types && npm run build:js",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline"
+    "build:types": "tsc --project tsconfig-build.json --emitDeclarationOnly",
+    "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --ignore \"**/*.stories.tsx\" --source-maps inline",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -34,15 +36,27 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-essentials": "^6.4.19",
+    "@storybook/addon-interactions": "^6.4.19",
+    "@storybook/addon-links": "^6.4.19",
+    "@storybook/react": "^6.4.19",
+    "@storybook/testing-library": "0.0.9",
     "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/styled-components": "^5.1.23",
+    "babel-loader": "^8.2.3",
+    "core-js": "^3.21.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@types/react-dom": "^17.0.11",
+    "framer-motion": "^6.2.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-virtualized-auto-sizer": "^1.0.6",
+    "react-virtuoso": "^2.7.1",
     "styled-components": "^5.3.3"
   }
 }
