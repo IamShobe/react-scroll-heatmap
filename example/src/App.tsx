@@ -1,10 +1,11 @@
 import React from 'react';
 
+import {Heatmap} from 'react-scroll-heatmap';
 
 export const App: React.FC = () => {
 
     return <div>
-        test
+        <Heatmap/>
     </div>
 }
 
