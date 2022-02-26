@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
 import AutoSizer from "react-virtualized-auto-sizer";
-import {Virtuoso} from "react-virtuoso";
+import {Virtuoso, VirtuosoProps} from "react-virtuoso";
 
 import Scrollbar from "./Scrollbar";
-import {Marker, MarkerConfig, MarkersConfig} from "./types";
+import {Marker, MarkersConfig} from "./types";
 import {useMotionValue} from "framer-motion";
 import {VirtuosoHandle} from "react-virtuoso/dist/components";
 
@@ -19,13 +19,14 @@ const Content = styled.div`
 `;
 
 
-export type HeatmapProps<T extends ReadonlyArray<string>, K extends MarkersConfig<T>> = {
+export type HeatmapExtendedProps<T extends ReadonlyArray<string>, K extends MarkersConfig<T>> = {
   markersConfig: K,
-  // getRowType: (index: number) => RowTypeName<T>
   markers: Marker<K>[]
-  itemContent: (index: number) => React.ReactElement
   totalCount: number
+  virtuosoInnerRef?: React.MutableRefObject<VirtuosoHandle | null>
 }
+
+export type HeatmapProps<T extends ReadonlyArray<string>, K extends MarkersConfig<T>, D, C> = VirtuosoProps<D, C> & HeatmapExtendedProps<T, K>
 
 const ScrollerWrapper = styled.div`
   &::-webkit-scrollbar {
@@ -53,16 +54,22 @@ const List = (
   }}/>;
 });
 
-export const Heatmap = <T extends ReadonlyArray<string>, K extends MarkersConfig<T>>(
+export const Heatmap = <T extends ReadonlyArray<string>, K extends MarkersConfig<T>, D, C>(
   {
-    totalCount, itemContent, markers, markersConfig,
-  }: HeatmapProps<T, K>,
+    totalCount, itemContent, virtuosoInnerRef, markers, markersConfig, onScroll, scrollerRef, ...rest
+  }: HeatmapProps<T, K, D, C>,
 ) => {
   const y = useMotionValue(0);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
-  const scrollerRef = useRef<HTMLElement | Window | null>();
+  const innerScrollerRef = useRef<HTMLElement | Window | null>();
   const listRef = useRef<HTMLDivElement | null>();
   const [currentTotalHeight, setTotalHeight] = useState(0);
+
+  useEffect(() => {
+    if (virtuosoInnerRef) {
+      virtuosoInnerRef.current = virtuosoRef.current;
+    }
+  }, [virtuosoRef.current])
 
   const ThisList = useMemo(() => List(listRef, currentTotalHeight, setTotalHeight), [listRef, currentTotalHeight, setTotalHeight]);
 
@@ -77,12 +84,14 @@ export const Heatmap = <T extends ReadonlyArray<string>, K extends MarkersConfig
               List: ThisList,
             }}
             scrollerRef={(ref) => {
-              scrollerRef.current = ref;
+              innerScrollerRef.current = ref;
+              scrollerRef?.(ref);
             }}
-            onScroll={(e) => {
+            onScroll={(e, ...args) => {
               y.set(height * ((e.target as HTMLElement)?.scrollTop ?? 0) / currentTotalHeight);
+              onScroll?.(e, ...args);
             }}
-            totalCount={totalCount} itemContent={itemContent}/>
+            totalCount={totalCount} itemContent={itemContent} {...rest}/>
         </Content>
         <Scrollbar y={y} totalCount={totalCount} height={height}
                    totalHeight={currentTotalHeight}
@@ -90,13 +99,6 @@ export const Heatmap = <T extends ReadonlyArray<string>, K extends MarkersConfig
                      virtuosoRef.current?.scrollToIndex(props);
                    }}
                    markers={markers} markersConfig={markersConfig}/>
-        <button onClick={() => {
-          console.log(virtuosoRef.current);
-          console.log(scrollerRef.current);
-          console.log(listRef.current, currentTotalHeight);
-        }}>
-          test
-        </button>
       </Container>
     }
   </AutoSizer>;

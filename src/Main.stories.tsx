@@ -26,7 +26,7 @@ const Template: ComponentStory<typeof Heatmap> = (args) => <div
   <Heatmap totalCount={100}
            markersConfig={markerConfigs}
            markers={[{
-             rowIndex: 100,
+             rowIndex: 20,
              type: "test1",
            }]}
            itemContent={(index) => <div key={index}>{index}</div>}/>
